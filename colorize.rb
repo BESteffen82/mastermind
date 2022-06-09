@@ -1,27 +1,28 @@
 require 'colorize'
 
-module colorize
+module Colorize
 	def colorize(text, color_code)
 		"#{color_code}#{text}\e[0m"
 	end
 
 	def red(text)
-		colorize(text, 31)
+		colorize(text, "\e[31m")
 	end
 	
 	def blue(text)
-		colorize(text, 34)
+		colorize(text, "\e[34m")
 	end
 
 	def green(text)
-		colorize(text, 32)
+		colorize(text, "\e[32m")
 	end
 
 	def yellow(text)
-		colorize(text, 33)
+		colorize(text, "\e[33m")
 	end
 
 	def purple(text)
-		colorize(text, 35)
+		colorize(text, "\e[35m")
 	end
 end
+
