@@ -1,5 +1,3 @@
-require 'colorize'
-
 module Colorize
 	def colorize(text, color_code)
 		"#{color_code}#{text}\e[0m"
