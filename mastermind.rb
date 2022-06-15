@@ -112,7 +112,6 @@ class Mastermind
     print "\nTurns left: #{@turns}"
     print "\nComputer guess: "
     print_combo    
-    p @secret_combo
     print 'Clues: '
     print_clues
     puts "\n"
@@ -128,14 +127,12 @@ class Mastermind
 
   def computer_logic    
     @color_pairs.each_with_index do |(guess_color, secret_color), index|      
-      if guess_color == secret_color
-        p guess_color[index]
+      if guess_color == secret_color        
         @computer_guess[index] = secret_color
       elsif guess_color != secret_color
         @computer_guess[index] = COLORS.sample
       end
-    end
-    p @computer_guess 
+    end    
   end
 
   def print_combo
