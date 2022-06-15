@@ -50,9 +50,13 @@ class Mastermind
   end
 
   def computer_guess
-    @turns -= 1
     @computer_guess = []
     4.times { @computer_guess << COLORS.sample }
+    @turns -= 1        
+    if @turns < 11 
+      computer_logic
+      #@turns -= 1
+    end                
     @guess = @computer_guess
     @combo = @computer_guess
   end
@@ -70,7 +74,7 @@ class Mastermind
     @guess = @human_guess
   end
 
-  def check_guess    
+  def check_guess
     @color_pairs = @guess.zip(@secret_combo)
     @color_and_index = @color_pairs.count { |guess_color, secret_color| guess_color == secret_color }
     human, computer = @color_pairs.reject { |guess_color, secret_color| guess_color == secret_color }.transpose
@@ -95,7 +99,7 @@ class Mastermind
     print_clues
     puts "\n"
     if @color_and_index == 4
-      print red("\nThe code is broken! YOU win!!")
+      print yellow("\nThe code is broken! YOU win!!")
       play_again
     end
     if @turns.zero?
@@ -106,20 +110,32 @@ class Mastermind
 
   def print_computer_game_round
     print "\nTurns left: #{@turns}"
-    print "\nComputer guess: "    
-    print_combo
-    p @guess
+    print "\nComputer guess: "
+    print_combo    
+    p @secret_combo
     print 'Clues: '
     print_clues
     puts "\n"
     if @color_and_index == 4
-      print red("\nThe computer broke your code! YOU lose!")
+      print red("\nThe computer broke the code! YOU lose!")
       play_again
     end
     if @turns.zero?
-      print red("\nThe computer failed to break your code. You win!!")
+      print yellow("\nThe computer failed to break your code. YOU win!!")
       play_again
+    end     
+  end
+
+  def computer_logic    
+    @color_pairs.each_with_index do |(guess_color, secret_color), index|      
+      if guess_color == secret_color
+        p guess_color[index]
+        @computer_guess[index] = secret_color
+      elsif guess_color != secret_color
+        @computer_guess[index] = COLORS.sample
+      end
     end
+    p @computer_guess 
   end
 
   def print_combo
@@ -166,12 +182,12 @@ class Mastermind
   end
 
   def computer_play_game
-    computer_guess_prompt
-    loop do
-      computer_guess
+    computer_guess_prompt    
+    loop do      
+      computer_guess            
       check_guess
-      print_computer_game_round
-      sleep(2)
+      print_computer_game_round                 
+      sleep(1)                 
     end
   end
 end
