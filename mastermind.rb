@@ -2,9 +2,13 @@
 
 require 'pry-byebug'
 require './colorize'
+require './human'
+require './computer'
 
 class Mastermind
   include Colorize
+  include Human
+  include Computer
 
   def initialize
     @secret_combo = []
@@ -33,46 +37,7 @@ class Mastermind
 
   def set_secret_combo
     4.times { @secret_combo << COLORS.sample }
-  end
-
-  def human_guess_prompt
-    puts "\nTurns left: #{@turns}\nType your 4 color combination (separate colors with a space):"
-    @human_guess = gets.chomp.upcase.split
-  end
-
-  def computer_guess_prompt
-    puts "\nCreate a 4 color secret combination (separate colors with a space):"
-    @human_secret_combo = gets.chomp.upcase.split
-    @combo = @human_secret_combo
-    @secret_combo = @human_secret_combo
-    print "\nYour secret combination: "
-    print_combo
-  end
-
-  def computer_guess
-    @computer_guess = []
-    4.times { @computer_guess << COLORS.sample }
-    @turns -= 1        
-    if @turns < 11 
-      computer_logic
-      #@turns -= 1
-    end                
-    @guess = @computer_guess
-    @combo = @computer_guess
-  end
-
-  def human_guess
-    human_guess_prompt
-    @human_guess.each do |color|
-      unless COLORS.include?(color) && @human_guess.length == 4
-        puts "\nInvalid answer. Try again!\n\n"
-        human_guess_prompt
-      end
-    end
-    @turns -= 1
-    @combo = @human_guess
-    @guess = @human_guess
-  end
+  end  
 
   def check_guess
     @color_pairs = @guess.zip(@secret_combo)
@@ -90,49 +55,6 @@ class Mastermind
   def print_clues
     @color_and_index.times { print "#{red("\u25C9".encode('utf-8'))} " }
     @color_only.times { print "#{"\u25C9".encode('utf-8')} " }
-  end
-
-  def print_human_game_round
-    print "\nYour guess: "
-    print_combo
-    print 'Clues: '
-    print_clues
-    puts "\n"
-    if @color_and_index == 4
-      print yellow("\nThe code is broken! YOU win!!")
-      play_again
-    end
-    if @turns.zero?
-      print red("\nYou failed to break the code. YOU lose!")
-      play_again
-    end
-  end
-
-  def print_computer_game_round
-    print "\nTurns left: #{@turns}"
-    print "\nComputer guess: "
-    print_combo    
-    print 'Clues: '
-    print_clues
-    puts "\n"
-    if @color_and_index == 4
-      print red("\nThe computer broke the code! YOU lose!")
-      play_again
-    end
-    if @turns.zero?
-      print yellow("\nThe computer failed to break your code. YOU win!!")
-      play_again
-    end     
-  end
-
-  def computer_logic    
-    @color_pairs.each_with_index do |(guess_color, secret_color), index|      
-      if guess_color == secret_color        
-        @computer_guess[index] = secret_color
-      elsif guess_color != secret_color
-        @computer_guess[index] = COLORS.sample
-      end
-    end    
   end
 
   def print_combo
@@ -168,27 +90,11 @@ class Mastermind
     else puts 'Invalid answer. Respond with Y or N'
          play_again
     end
-  end
-
-  def human_play_game
-    loop do
-      human_guess
-      check_guess
-      print_human_game_round
-    end
-  end
-
-  def computer_play_game
-    computer_guess_prompt    
-    loop do      
-      computer_guess            
-      check_guess
-      print_computer_game_round                 
-      sleep(1)                 
-    end
-  end
+  end  
 end
 
 new_game = Mastermind.new
 new_game.print_rules
 new_game.role_choice
+new_game.human_play_game
+new_game.computer_play_game
