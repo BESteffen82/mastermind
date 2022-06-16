@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'pry-byebug'
 require './colorize'
 require './human'
 require './computer'
@@ -12,6 +11,7 @@ class Mastermind
 
   def initialize
     @secret_combo = []
+    @all_combos = []
     @turns = 12
     set_secret_combo
   end
@@ -37,15 +37,15 @@ class Mastermind
 
   def set_secret_combo
     4.times { @secret_combo << COLORS.sample }
-  end  
+  end
 
   def check_guess
     @color_pairs = @guess.zip(@secret_combo)
     @color_and_index = @color_pairs.count { |guess_color, secret_color| guess_color == secret_color }
     human, computer = @color_pairs.reject { |guess_color, secret_color| guess_color == secret_color }.transpose
     human.to_a.each do |color|
-      comp_color_index = computer.index(color)
-      computer.delete_at(comp_color_index) if comp_color_index
+      @comp_color_index = computer.index(color)
+      computer.delete_at(@comp_color_index) if @comp_color_index
     end
     human = [] if human.nil?
     computer = [] if computer.nil?
@@ -90,7 +90,7 @@ class Mastermind
     else puts 'Invalid answer. Respond with Y or N'
          play_again
     end
-  end  
+  end
 end
 
 new_game = Mastermind.new

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module Human
-	def human_guess_prompt
+  def human_guess_prompt
     puts "\nTurns left: #{@turns}\nType your 4 color combination (separate colors with a space):"
     @human_guess = gets.chomp.upcase.split
   end
 
-	def human_guess
+  def human_guess
     human_guess_prompt
     @human_guess.each do |color|
       unless Mastermind::COLORS.include?(color) && @human_guess.length == 4
@@ -16,8 +18,8 @@ module Human
     @combo = @human_guess
     @guess = @human_guess
   end
-	
-	def print_human_game_round
+
+  def print_human_game_round
     print "\nYour guess: "
     print_combo
     print 'Clues: '
@@ -33,7 +35,7 @@ module Human
     end
   end
 
-	def human_play_game
+  def human_play_game
     loop do
       human_guess
       check_guess
